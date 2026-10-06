@@ -1,6 +1,7 @@
 import './style.css';
 import { getProfileData } from '../../services/profile';
 import { useQuery } from '@tanstack/react-query';
+import { PostsCarousel } from './PostCarousel';
 
 export const ProfilePosts = () => {
   const { data, isLoading } = useQuery({
@@ -28,26 +29,21 @@ export const ProfilePosts = () => {
     );
   }
 
-  const { pinnedPost } = data;
+  // Use the array if present, else fall back to the single post.
+  // Sort a copy newest to oldest so cached data isn't mutated.
+  const posts = [
+    ...(data.pinnedPosts ?? (data.pinnedPost ? [data.pinnedPost] : [])),
+  ].sort((a, b) => new Date(b.publishDate) - new Date(a.publishDate));
 
   return (
     <section id="profile-posts">
       <h2 className="page-heading-2">Pinned Posts</h2>
       <div className="profile-post-results">
-        <div className="content-card">
-          <div className="post-author fade-in">
-            <div className="post-author-avatar fade-in"></div>
-            <div className="post-author-info fade-in">
-              <p className="page-paragraph">
-                {pinnedPost.authorFirstName} {pinnedPost.authorLastName}
-              </p>
-              <p className="page-micro">
-                {pinnedPost.jobTitle} @ {pinnedPost.companyName}
-              </p>
-            </div>
-          </div>
-          <p className="page-body post-content fade-in">{pinnedPost.post}</p>
-        </div>
+        {posts.length === 0 ? (
+          <p className="page-micro">No pinned posts yet.</p>
+        ) : (
+          <PostsCarousel posts={posts} />
+        )}
       </div>
     </section>
   );
