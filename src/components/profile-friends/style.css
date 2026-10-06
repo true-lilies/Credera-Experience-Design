@@ -1,25 +1,166 @@
-#profile-friends {
+/* =========================================================
+   FRIENDS
+   ========================================================= */
+
+#profile-friends .content-card {
+  padding: 20px 16px;
 }
+
+/* ---------- Search + density toolbar ---------- */
+
+#profile-friends .friends-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 12px 0 4px;
+}
+
+#profile-friends .friends-search {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+}
+
+#profile-friends .friends-search-icon {
+  position: absolute;
+  top: 50%;
+  left: 12px;
+  display: flex;
+  transform: translateY(-50%);
+  color: var(--text-muted, #6b6b6b);
+  pointer-events: none;
+}
+
+#profile-friends .friends-search-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 36px 10px 38px;
+  border: 1px solid var(--border, rgba(0, 0, 0, 0.2));
+  border-radius: 999px;
+  background: var(--surface, #ffffff);
+  color: var(--text-strong, inherit);
+  font: inherit;
+  font-size: 0.9rem;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+#profile-friends .friends-search-input::placeholder {
+  color: var(--text-muted, #6b6b6b);
+  opacity: 1;
+}
+
+#profile-friends .friends-search-input:focus-visible {
+  outline: none;
+  border-color: var(--accent, #2f6f8f);
+  box-shadow: 0 0 0 3px rgba(47, 111, 143, 0.3);
+}
+
+/* Hide the browser's built-in clear button, since we have our own */
+#profile-friends .friends-search-input::-webkit-search-cancel-button {
+  display: none;
+}
+
+#profile-friends .friends-search-clear {
+  position: absolute;
+  top: 50%;
+  right: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--text-muted, #595959);
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+
+#profile-friends .friends-search-clear:hover {
+  background: var(--hover, rgba(0, 0, 0, 0.08));
+}
+
+#profile-friends .friends-density-toggle {
+  flex: 0 0 auto;
+  padding: 9px 14px;
+  border: 1px solid var(--accent, #2f6f8f);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--accent, #2f6f8f);
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+#profile-friends .friends-density-toggle:hover {
+  background: var(--accent-soft, rgba(47, 111, 143, 0.08));
+}
+
+#profile-friends .friends-density-toggle[aria-pressed='true'] {
+  background: var(--accent, #2f6f8f);
+  color: var(--on-accent, #ffffff);
+}
+
+#profile-friends .friends-search-clear:focus-visible,
+#profile-friends .friends-density-toggle:focus-visible {
+  outline: 3px solid var(--midnightBlack, #1a1a1a);
+  outline-offset: 2px;
+}
+
+#profile-friends .friends-search-status {
+  margin: 4px 2px 8px;
+  font-size: 0.75rem;
+  color: var(--text-muted, #595959);
+}
+
+#profile-friends .friends-empty {
+  padding: 16px 4px;
+  font-size: 0.9rem;
+  color: var(--text-muted, #595959);
+}
+
+/* ---------- List (scrolls inside the card) ---------- */
 
 .profile-friends-list {
   list-style: none;
   padding: 0;
   margin: 0;
-  margin-top: 16px;
+  margin-top: 16px; /* skeleton state */
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
+  align-items: stretch;
+  justify-content: flex-start; /* "center" would hide the top of the list */
 }
+
+#profile-friends .friends-search-status ~ .profile-friends-list {
+  margin-top: 0;
+}
+
+#profile-friends .profile-friends-list {
+  max-height: 520px; /* tune to match the height of the left column */
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+/* ---------- Rows ---------- */
 
 .profile-list-item {
   display: flex;
-  width: 100%;
   flex-direction: row;
+  flex-shrink: 0; /* don't squish rows to fit the capped height */
   align-items: center;
-  margin-bottom: 20px;
+  width: 100%;
+  min-width: 0;
+  margin-bottom: 10px;
+  padding: 10px 12px;
   background-color: var(--grayscale_1);
-  padding: 16px 24px;
   border-radius: 10px;
 }
 
@@ -31,18 +172,18 @@
   display: none;
 }
 
-.profile-list-item .top-friend-flag + .page-paragraph {
-  margin-bottom: 8px;
-}
+/* ---------- Avatar ---------- */
 
 .profile-list-item-avatar {
+  position: relative;
   display: inline-block;
+  flex: 0 0 auto;
+  width: 52px;
+  height: 52px;
+  min-width: 52px;
   background-color: var(--grayscale_2);
   border-radius: 50%;
-  overflow: hidden;
-  height: 90px;
-  width: 90px;
-  min-width: 90px;
+  overflow: visible; /* so the crown isn't cut off by the circle */
 }
 
 .profile-list-item-avatar img {
@@ -50,13 +191,135 @@
   width: 100%;
 }
 
-.profile-list-item-info {
-  width: 100%;
-  margin-left: 24px;
+.profile-list-item-avatar .avatar-initials {
+  font-size: 1rem;
 }
 
-/* SKELETON LOADING */
+/* Gold ring for top friends (a shadow, so the avatar size doesn't change) */
+.profile-list-item-avatar.top-friend-avatar {
+  box-shadow:
+    0 0 0 2px #ffffff,
+    0 0 0 4px #f59e0b;
+}
+
+/* Floating crown decoration */
+.avatar-crown-badge {
+  position: absolute;
+  top: -10px;
+  right: -6px;
+  font-size: 16px;
+  line-height: 1;
+  filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.3));
+  transform: rotate(14deg);
+  pointer-events: none;
+}
+
+/* ---------- Text ---------- */
+
+/* min-width: 0 is what lets the text column shrink instead of overflowing */
+.profile-list-item-info {
+  flex: 1;
+  width: auto;
+  min-width: 0;
+  margin-left: 12px;
+}
+
+.friend-name-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.friend-name-row .page-paragraph {
+  min-width: 0;
+  overflow: hidden;
+  font-size: 1rem;
+  line-height: 1.3;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.profile-list-item-info .page-micro {
+  overflow: hidden;
+  font-size: 0.8rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* "TOP" pill */
+.top-pill-badge {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 8px;
+  border-radius: 9999px;
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  color: #1a1a1a;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  line-height: 1;
+  box-shadow: 0 1px 3px rgba(245, 158, 11, 0.3);
+}
+
+/* ---------- SKELETON LOADING ---------- */
 
 #profile-friends .skeleton-block {
-    margin-bottom: 4px;
+  margin-bottom: 4px;
+}
+
+/* ---------- Compact view ---------- */
+
+#profile-friends .profile-friends-list.is-compact .profile-list-item {
+  margin-bottom: 6px;
+  padding-top: 6px;
+  padding-bottom: 6px;
+}
+
+#profile-friends .profile-friends-list.is-compact .profile-list-item-avatar {
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+}
+
+#profile-friends .profile-friends-list.is-compact .avatar-initials {
+  font-size: 0.8rem;
+}
+
+#profile-friends .profile-friends-list.is-compact .avatar-crown-badge {
+  top: -8px;
+  right: -6px;
+  font-size: 0.8rem;
+}
+
+#profile-friends .profile-friends-list.is-compact .profile-list-item-info {
+  margin-left: 12px;
+}
+
+/* Job line is hidden visually in compact mode but still read by screen readers */
+#profile-friends .profile-friends-list.is-compact .friend-job {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Utility for the search label */
+#profile-friends .visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
 }
