@@ -3,8 +3,7 @@ import './style.css';
 import { getProfileData } from '../../services/profile';
 import { useQuery } from '@tanstack/react-query';
 
-// How many groups start out randomly pre-selected as favorites
-const INITIAL_FAVORITE_COUNT = 3;
+
 
 // Object order = display order (most active to least)
 const ACTIVITY_LEVELS = {
@@ -67,15 +66,7 @@ const ChevronIcon = () => (
 const getLevelKey = group =>
   ACTIVITY_LEVELS[group.activity] ? group.activity : 'inactive';
 
-// Fisher-Yates shuffle, then take the first `count` ids
-const pickRandomIds = (groups, count) => {
-  const ids = groups.map(group => group.id);
-  for (let i = ids.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [ids[i], ids[j]] = [ids[j], ids[i]];
-  }
-  return ids.slice(0, count);
-};
+
 
 const initialOpenState = {
   favorites: true,
@@ -186,7 +177,7 @@ const GroupSection = ({
 export const ProfileGroups = () => {
   // Hooks must run before the early return below
   const [openSections, setOpenSections] = useState(initialOpenState);
-  // null = the user hasn't changed anything yet, so use the random starting picks
+  // null = the user hasn't changed anything yet, so use the API's favorites
   const [userFavorites, setUserFavorites] = useState(null);
   const initialFavoritesRef = useRef(null);
 
@@ -205,9 +196,11 @@ export const ProfileGroups = () => {
 
   const { groups } = data;
 
-  // Pick the random starting favorites once, then keep them stable
+// Start from the API's favorite flag once, then keep them stable
   if (!initialFavoritesRef.current) {
-    initialFavoritesRef.current = pickRandomIds(groups, INITIAL_FAVORITE_COUNT);
+    initialFavoritesRef.current = groups
+    .filter(group => group.favorite)
+    .map(group => group.id);
   }
 
   // Array of ids in the order the user picked them
