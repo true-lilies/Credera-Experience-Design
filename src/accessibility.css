@@ -1,0 +1,28 @@
+/* Baseline visible focus ring for anything without its own */
+:focus-visible {
+  outline: 3px solid var(--midnightBlack, #1a1a1a);
+  outline-offset: 2px;
+}
+
+/* Respect "reduce motion" everywhere, including fade-in and the loading shimmer */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}

@@ -4,7 +4,30 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + React</title>
+    <meta
+      name="description"
+      content="Profile with pinned posts, groups, and friends."
+    />
+    <title>Profile</title>
+    <script>
+      (function () {
+        try {
+          var root = document.documentElement;
+          var saved = localStorage.getItem('theme');
+          var theme =
+            saved === 'dark' || saved === 'light'
+              ? saved
+              : window.matchMedia('(prefers-color-scheme: dark)').matches
+                ? 'dark'
+                : 'light';
+          root.setAttribute('data-theme', theme);
+
+          if (localStorage.getItem('sidebar') === 'collapsed') {
+            root.setAttribute('data-sidebar', 'collapsed');
+          }
+        } catch (e) {}
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

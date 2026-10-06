@@ -1,0 +1,69 @@
+.friends-page {
+  box-sizing: border-box;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 24px 16px 40px;
+}
+
+@media (min-width: 1024px) {
+  .friends-page {
+    padding: 32px 24px 48px;
+  }
+}
+
+/* Same offset the home page uses under the mobile top bar */
+@media (max-width: 1023px) {
+  body:has(.friends-page) {
+    padding-top: 56px;
+  }
+}
+
+.friends-page-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 0;
+  color: var(--accent, #2f6f8f);
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.friends-page-back:hover {
+  text-decoration: underline;
+}
+
+.friends-page-title {
+  margin: 8px 0 4px;
+  text-align: left;
+  color: var(--text-strong, inherit);
+}
+
+.friends-page-title:focus {
+  outline: none;
+}
+
+/* ---------- The friends list, in page mode ---------- */
+
+#profile-friends.is-page .content-card {
+  padding: 0;
+  background: transparent;
+}
+
+#profile-friends.is-page .friends-toolbar {
+  max-width: 560px;
+}
+
+/* A roomy grid instead of the narrow scrolling sidebar list */
+#profile-friends.is-page .profile-friends-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 12px;
+  max-height: none;
+  padding-right: 0;
+  overflow: visible;
+}
+
+#profile-friends.is-page .profile-friends-list .profile-list-item {
+  margin-bottom: 0;
+}

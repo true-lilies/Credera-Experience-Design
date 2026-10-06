@@ -1,0 +1,220 @@
+/* ---------- Tokens ---------- */
+
+:root {
+  color-scheme: light;
+  --surface: #ffffff;
+  --surface-raised: #ffffff;
+  --sidebar-bg: #f8f7f7;
+  --border: rgba(0, 0, 0, 0.12);
+  --hover: rgba(0, 0, 0, 0.05);
+  --text-strong: #222222;
+  --text-muted: #595959;
+  --accent: #2f6f8f;
+  --accent-soft: rgba(47, 111, 143, 0.1);
+  --on-accent: #ffffff;
+  --amber: #b45309;
+  --error: #a33b4b;
+  --scroll-thumb: rgba(0, 0, 0, 0.22);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 10px 24px rgba(0, 0, 0, 0.16);
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+
+  /* Your existing variables from main.css, remapped */
+  --grayscale_0: #0b1220;
+  --grayscale_1: #141d31;
+  --grayscale_2: #2a3753;
+  --midnightBlack: #e8edf7;
+  --deepSmoke: #a7b3c9;
+
+  --surface: #0f1829;
+  --surface-raised: #1b2740;
+  --sidebar-bg: #0f1829;
+  --border: rgba(255, 255, 255, 0.12);
+  --hover: rgba(255, 255, 255, 0.07);
+  --text-strong: #f1f4fb;
+  --text-muted: #a7b3c9;
+  --accent: #7cc4da;
+  --accent-soft: rgba(124, 196, 218, 0.14);
+  --on-accent: #0b1220;
+  --amber: #fbbf24;
+  --error: #f3a6b3;
+  --scroll-thumb: rgba(255, 255, 255, 0.25);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 10px 24px rgba(0, 0, 0, 0.6);
+}
+
+:root[data-theme='dark'] .content-card {
+  background-color: var(--grayscale_1);
+}
+
+/* ---------- Friends ---------- */
+
+#profile-friends .content-card {
+  background-color: var(--surface);
+}
+
+#profile-friends .friends-search-icon,
+#profile-friends .friends-search-clear,
+#profile-friends .friends-search-status,
+#profile-friends .friends-empty {
+  color: var(--text-muted);
+}
+
+#profile-friends .friends-search-input {
+  background: var(--surface);
+  border-color: var(--border);
+  color: var(--text-strong);
+}
+
+#profile-friends .friends-search-input::placeholder {
+  color: var(--text-muted);
+  opacity: 1;
+}
+
+#profile-friends .friends-search-input:focus-visible {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 35%, transparent);
+}
+
+#profile-friends .friends-search-clear:hover {
+  background: var(--hover);
+}
+
+#profile-friends .friends-density-toggle,
+#profile-friends .friends-chip,
+#profile-friends .friends-empty-clear {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+#profile-friends .friends-density-toggle:hover,
+#profile-friends .friends-chip:hover,
+#profile-friends .friends-empty-clear:hover {
+  background: var(--accent-soft);
+}
+
+#profile-friends .friends-density-toggle[aria-pressed='true'],
+#profile-friends .friends-chip[aria-pressed='true'] {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+#profile-friends .profile-friends-list {
+  scrollbar-color: var(--scroll-thumb) transparent;
+}
+
+#profile-friends .profile-friends-list::-webkit-scrollbar-thumb {
+  background: var(--scroll-thumb);
+}
+
+#profile-friends .friends-list-wrap::after {
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--surface) 0%, transparent),
+    var(--surface)
+  );
+}
+
+.profile-list-item:hover,
+.profile-list-item:focus-within {
+  box-shadow: var(--shadow-sm);
+}
+
+.profile-list-item-avatar.top-friend-avatar {
+  box-shadow:
+    0 0 0 2px var(--grayscale_1),
+    0 0 0 4px #f59e0b;
+}
+
+.profile-list-item.is-last-top::after {
+  background: var(--border);
+}
+
+.avatar-star-badge {
+  background: var(--surface-raised);
+  color: var(--amber);
+}
+
+/* ---------- Pinned posts ---------- */
+
+.post-meta,
+.post-meta.is-stale,
+.posts-counter {
+  color: var(--text-muted);
+}
+
+.carousel-arrow {
+  background: var(--surface-raised);
+  color: var(--text-strong);
+  box-shadow: var(--shadow-sm);
+}
+
+.posts-show-all {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.posts-show-all:hover {
+  background: var(--accent-soft);
+}
+
+.post-toggle {
+  color: var(--accent);
+}
+
+.carousel-dot::before {
+  background: color-mix(in srgb, var(--text-strong) 30%, transparent);
+}
+
+.carousel-dot.is-active::before {
+  background: var(--accent);
+}
+
+/* ---------- Groups ---------- */
+
+.group-empty {
+  color: var(--text-muted);
+}
+
+/* ---------- Error state ---------- */
+
+.error-state {
+  border-color: color-mix(in srgb, var(--error) 40%, transparent);
+  background: color-mix(in srgb, var(--error) 8%, transparent);
+}
+
+.error-state-message,
+.error-state-retry {
+  color: var(--error);
+}
+
+.error-state-retry {
+  border-color: var(--error);
+}
+
+/* ---------- Groups section headers ---------- */
+
+.group-section {
+  border-bottom-color: var(--border);
+}
+
+.group-section-title {
+  color: var(--text-strong);
+}
+
+.group-section-count {
+  background: var(--hover);
+  color: var(--text-strong);
+}
+
+.group-section-desc,
+.group-section-chevron {
+  color: var(--text-muted);
+}
+
+.group-section-toggle:hover {
+  background: var(--hover);
+}

@@ -1,0 +1,503 @@
+/* =========================================================
+   LAYOUT: one variable drives the sidebar width AND the page offset.
+   Both rules live in this file, so they can never get out of sync
+   (and nothing in App.css or App.jsx has to be updated for this).
+   ========================================================= */
+
+:root {
+  --sidebar-w: 248px;
+}
+
+:root[data-sidebar='collapsed'] {
+  --sidebar-w: 72px;
+}
+
+/* ---------- Page gutters + stacked order (default and narrow pages) ----------
+   A little breathing room next to the sidebar and on the right edge, and
+   Friends sits between Pinned Posts and Groups when everything is stacked. */
+
+:root .app-grid {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 16px 32px;
+}
+
+:root .app-feed {
+  display: contents;
+}
+
+:root .app-feed > #profile-header {
+  order: 1;
+}
+
+:root .app-feed > #post-composer {
+  order: 2;
+}
+
+:root .app-feed > #profile-posts {
+  order: 3;
+}
+
+:root .app-feed > #profile-groups {
+  order: 5;
+}
+
+:root .app-friends {
+  order: 4;
+  position: static;
+  align-self: stretch;
+  width: 100%;
+  margin-top: 32px;
+}
+
+@media (min-width: 1024px) {
+  :root .app-grid {
+    padding: 0 24px 40px;
+  }
+}
+
+@media (min-width: 1024px) {
+  /* The page starts exactly where the sidebar ends.
+     ":root" raises specificity so older margin rules can't win. */
+  :root .app-main {
+    margin-left: var(--sidebar-w);
+    min-width: 0;
+    overflow-x: clip; /* wide content can't push the page sideways */
+    transition: margin-left 0.25s ease;
+  }
+
+  /* The optional wrapper from App.jsx is just a plain block */
+  :root .app-shell {
+    display: block;
+  }
+
+  /* The page measures ITS OWN width (not the window's), so collapsing the
+     sidebar gives Friends room to move back to the right-hand side. */
+  :root .app-main {
+    container-type: inline-size;
+    container-name: page;
+  }
+}
+
+/* Two columns whenever the page itself is at least 940px wide.
+   Friends sits to the right of the feed, in its original order. */
+@media (min-width: 1024px) {
+  @container page (min-width: 940px) {
+    :root .app-grid {
+      display: grid;
+      flex-direction: row;
+      grid-template-columns: minmax(0, 1fr) 320px;
+      gap: 24px;
+    }
+
+    :root .app-feed {
+      display: block;
+      min-width: 0;
+    }
+
+    :root .app-feed > #profile-header,
+    :root .app-feed > #post-composer,
+    :root .app-feed > #profile-posts,
+    :root .app-feed > #profile-groups {
+      order: 0;
+    }
+
+    :root .app-friends {
+      position: sticky;
+      top: 16px;
+      align-self: start;
+      order: 0;
+      width: auto;
+      margin-top: 24px;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root .app-main {
+    transition: none;
+  }
+}
+
+/* ---------- Shared ---------- */
+
+.topbar,
+.sidebar-backdrop,
+.sidebar-close,
+.sidebar-collapse {
+  display: none;
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 24px 16px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  background: var(--sidebar-bg);
+  border-right: 1px solid var(--border);
+}
+
+/* Focus rings sit inside the panel so overflow can't clip them */
+.sidebar a:focus-visible,
+.sidebar button:focus-visible {
+  outline-offset: -2px;
+}
+
+.sidebar-profile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  text-align: center;
+}
+
+.sidebar-avatar {
+  width: 72px;
+  height: 72px;
+  margin-bottom: 8px;
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.sidebar-avatar .avatar-initials {
+  font-size: 1.6rem;
+}
+
+.sidebar-name {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-strong);
+}
+
+.sidebar-role {
+  font-size: 0.75rem;
+  line-height: 1.4;
+  color: var(--text-muted);
+}
+
+/* ---------- Nav ---------- */
+
+.sidebar-nav ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.sidebar-link svg {
+  flex: 0 0 auto;
+}
+
+a.sidebar-link:hover {
+  background: var(--hover);
+  color: var(--text-strong);
+}
+
+a.sidebar-link[aria-current='page'] {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+.sidebar-link.is-soon {
+  opacity: 0.65;
+  cursor: default;
+}
+
+.sidebar-soon {
+  margin-left: auto;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--hover);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* ---------- Footer: collapse button + theme switch ---------- */
+
+.sidebar-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: auto;
+}
+
+.sidebar-collapse {
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 10px 12px;
+  border: none;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--text-muted);
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.sidebar-collapse:hover {
+  background: var(--hover);
+  color: var(--text-strong);
+}
+
+.sidebar-collapse svg {
+  flex: 0 0 auto;
+}
+
+.sidebar-collapse-icon {
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: transform 0.25s ease;
+}
+
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--text-strong);
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.theme-toggle-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.theme-toggle-track {
+  position: relative;
+  width: 40px;
+  height: 22px;
+  border-radius: 999px;
+  background: var(--grayscale_2);
+  transition: background-color 0.2s ease;
+}
+
+.theme-toggle-thumb {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+  transition: transform 0.2s ease;
+}
+
+.theme-toggle[aria-checked='true'] .theme-toggle-track {
+  background: var(--accent);
+}
+
+.theme-toggle[aria-checked='true'] .theme-toggle-thumb {
+  transform: translateX(18px);
+}
+
+/* ---------- Desktop: fixed panel, width = --sidebar-w ---------- */
+
+@media (min-width: 1024px) {
+  .sidebar {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 40;
+    width: var(--sidebar-w);
+    transition:
+      width 0.25s ease,
+      padding 0.25s ease;
+  }
+
+  .sidebar-collapse {
+    display: flex;
+  }
+
+  /* ----- Collapsed rail (driven by the same attribute as the column width) ----- */
+
+  :root[data-sidebar='collapsed'] .sidebar {
+    padding: 24px 12px;
+  }
+
+  :root[data-sidebar='collapsed'] .sidebar-name,
+  :root[data-sidebar='collapsed'] .sidebar-role,
+  :root[data-sidebar='collapsed'] .sidebar-soon,
+  :root[data-sidebar='collapsed'] .theme-toggle-track {
+    display: none;
+  }
+
+  :root[data-sidebar='collapsed'] .sidebar-avatar {
+    width: 44px;
+    height: 44px;
+    margin-bottom: 0;
+  }
+
+  :root[data-sidebar='collapsed'] .sidebar-avatar .avatar-initials {
+    font-size: 1.1rem;
+  }
+
+  /* Labels leave the layout but stay available to screen readers */
+  :root[data-sidebar='collapsed'] .sidebar-label,
+  :root[data-sidebar='collapsed'] .theme-toggle-text {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  :root[data-sidebar='collapsed'] .sidebar-link,
+  :root[data-sidebar='collapsed'] .sidebar-collapse,
+  :root[data-sidebar='collapsed'] .theme-toggle {
+    justify-content: center;
+    padding-right: 0;
+    padding-left: 0;
+  }
+
+  :root[data-sidebar='collapsed'] .sidebar-collapse-icon {
+    transform: rotate(180deg);
+  }
+}
+
+/* ---------- Mobile / tablet: top bar + slide-out drawer ---------- */
+
+@media (max-width: 1023px) {
+  .topbar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 30;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    height: 56px;
+    padding: 0 12px;
+    background: var(--sidebar-bg);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .topbar-menu {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border: none;
+    border-radius: 10px;
+    background: transparent;
+    color: var(--text-strong);
+    cursor: pointer;
+  }
+
+  .topbar-menu:hover {
+    background: var(--hover);
+  }
+
+  .topbar-title {
+    font-weight: 700;
+    color: var(--text-strong);
+  }
+
+  .sidebar {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 60;
+    width: min(300px, 86vw);
+    transform: translateX(-100%);
+    visibility: hidden; /* keeps the closed drawer out of the tab order */
+    transition:
+      transform 0.28s ease,
+      visibility 0s linear 0.28s;
+  }
+
+  .sidebar.is-open {
+    transform: none;
+    visibility: visible;
+    box-shadow: var(--shadow-md);
+    transition:
+      transform 0.28s ease,
+      visibility 0s;
+  }
+
+  .sidebar-close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border: none;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--text-strong);
+    cursor: pointer;
+  }
+
+  .sidebar-close:hover {
+    background: var(--hover);
+  }
+
+  .sidebar-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    display: block;
+    background: rgba(0, 0, 0, 0.5);
+    cursor: default;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sidebar,
+  .sidebar.is-open,
+  .sidebar-collapse,
+  .sidebar-collapse-icon,
+  .theme-toggle-track,
+  .theme-toggle-thumb,
+  .sidebar-link {
+    transition: none;
+  }
+}
