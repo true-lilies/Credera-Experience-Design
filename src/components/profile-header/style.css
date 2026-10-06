@@ -8,13 +8,14 @@
 .profile-avatar {
   position: absolute;
   top: -56px;
+  left: 0;
+  width: 150px;
+  height: 150px;
   background-color: var(--grayscale_2);
   border: 4px solid var(--grayscale_0);
   border-radius: 50%;
   overflow: hidden;
-  height: 210px;
-  width: 210px;
-  z-index: 999;
+  z-index: 2; /* was 999, which drew over the mobile top bar and drawer */
 }
 
 .profile-avatar img {
@@ -22,12 +23,20 @@
   width: 100%;
 }
 
+.profile-avatar .avatar-initials {
+  font-size: 3rem;
+}
+
+/* A real margin instead of transform, so the block can't spill into Friends */
 .profile-info {
   flex: 1;
-  padding-left: 100px;
-  position: relative;
-  max-width: calc(100% - 100px);
-  transform: translateX(128px);
+  min-width: 0;
+  margin-left: 178px;
+  padding: 24px 0;
+}
+
+/* Stays transparent in both themes (beats the dark-mode card rule) */
+#profile-header .profile-info.content-card {
   background-color: transparent;
 }
 
@@ -43,8 +52,26 @@
   left: 0;
 }
 
-/* SKELTON LOADING */
+/* SKELETON LOADING */
 
 #profile-header .skeleton-block--half {
   height: 42px;
+}
+
+/* Small screens: avatar sits above the name instead of beside it */
+@media (max-width: 600px) {
+  .profile-avatar {
+    top: -48px;
+    width: 110px;
+    height: 110px;
+  }
+
+  .profile-avatar .avatar-initials {
+    font-size: 2.2rem;
+  }
+
+  .profile-info {
+    margin-left: 0;
+    padding-top: 72px;
+  }
 }

@@ -1,6 +1,7 @@
 import './style.css';
 import { getProfileData } from '../../services/profile';
 import { useQuery } from '@tanstack/react-query';
+import { Avatar } from '../avatar';
 
 export const ProfileHeader = () => {
   const { data, isLoading } = useQuery({
@@ -31,19 +32,18 @@ export const ProfileHeader = () => {
     <section id="profile-header">
       <div className="profile-header">
         <div className="profile-avatar">
-          <img className="loading" src="/avatar.png" />
+           <Avatar name={fullName} src={data?.image} />
         </div>
         <div className="profile-info content-card">
-          <h1 class={`profile-info-name skeleton-block skeleton-block--half`}>
+          <h1 className="profile-info-name">
             {fullName}
-            <img src="/underline.svg" className="profile-underline" />
+            <img src="/underline.svg" className="profile-underline" alt="" />
           </h1>
-          <p
-            class={`page-paragraph page-paragraph--smoke skeleton-block skeleton-block--quarter loading`}
-          />
+          <p className="page-paragraph page-paragraph--smoke">
+            {data?.jobTitle} @ {data?.companyName}
+          </p>
         </div>
       </div>
-      {/* <pre>{JSON.stringify(profileData, null, 2)}</pre> */}
     </section>
   );
 };
