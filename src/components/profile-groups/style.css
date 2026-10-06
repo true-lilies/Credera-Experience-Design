@@ -1,26 +1,43 @@
+/* =========================================================
+   PROFILE GROUPS
+   ========================================================= */
+
 #profile-groups {
   margin-top: 32px;
 }
 
+/* ---------- Card grid (max 4 per row) ---------- */
+
 .profile-group-results {
   list-style: none;
   margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: flex-start;
-  margin: 16px -10px;
-  flex-wrap: wrap;
+  padding: 0 0 16px; /* bottom space so hover shadows aren't clipped */
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 20px;
 }
 
 .profile-group-results-item {
-  flex: 25%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  min-width: 125px;
-  padding: 0 10px 20px 10px;
+  display: block;
+  min-width: 0;
+  padding: 0;
+}
+
+/* Wrapper holds the card link and the favorite button */
+.group-card-wrap {
+  position: relative;
+  max-width: 200px; /* original max width */
+  margin: 0 auto; /* keeps cards centered in each column */
+  transition: transform 0.25s ease;
+}
+
+/* Lift the whole wrapper so the star button moves with the card */
+.group-card-wrap:hover {
+  transform: translateY(-4px);
+}
+
+.group-card-wrap:hover .group-card {
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.16);
 }
 
 .profile-group-results-card {
@@ -28,33 +45,35 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 0;
   width: 100%;
   max-width: 200px;
+  margin: 0 auto;
+  padding: 0;
   background-color: var(--grayscale_1);
   text-decoration: none;
-  color: var(--midnight_black);
-
+  color: var(--midnightBlack);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: box-shadow 0.25s ease;
 }
 
-.profile-group-content {
-  padding: 16px 8px;
+/* Inside the wrapper, the wrapper controls size and centering */
+.group-card-wrap .profile-group-results-card {
+  max-width: none;
+  margin: 0;
 }
+
+.group-card:focus-visible {
+  outline: 3px solid var(--midnightBlack, #1a1a1a);
+  outline-offset: 3px;
+}
+
+/* ---------- Card image ---------- */
 
 .profile-group-avatar {
-  display: inline-block;
-  height: 190px;
+  position: relative;
+  display: block;
+  height: 190px; /* original height */
   width: 100%;
-}
-
-.profile-group-avatar + p {
-  padding-top: 16px;
-}
-
-.profile-group-avatar + p + a {
-  padding-bottom: 16px;
 }
 
 .profile-group-avatar img {
@@ -64,7 +83,247 @@
   background-color: var(--grayscale_2);
 }
 
-/* SKELETON LOADING  */
+/* Subtle gradient where the photo meets the color strip (image only) */
+.profile-group-avatar::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 45px;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.22), transparent);
+  pointer-events: none;
+}
+
+/* ---------- Card label strip (color set inline from activity) ---------- */
+
+.profile-group-content {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px 8px; /* original padding */
+  text-align: center;
+}
+
+.profile-group-content .group-name {
+  margin: 0;
+  color: inherit;
+}
+
+/* Small activity label (shown on cards in the Favorites section) */
+.profile-group-status {
+  display: block;
+  margin-top: 2px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+
+/* ---------- Favorite toggle button (top-right of the image) ---------- */
+
+.group-favorite-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.92);
+  color: #6b6b6b;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+  cursor: pointer;
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease,
+    color 0.2s ease;
+}
+
+.group-favorite-btn:hover {
+  transform: scale(1.12);
+}
+
+.group-favorite-btn[aria-pressed='true'] {
+  color: #e0a800;
+}
+
+.group-favorite-btn:focus-visible {
+  outline: 3px solid var(--midnightBlack, #1a1a1a);
+  outline-offset: 2px;
+}
+
+/* On devices with hover, unselected stars appear only on hover or focus.
+   Touch devices always show them, since they can't hover. */
+@media (hover: hover) {
+  .group-favorite-btn[aria-pressed='false'] {
+    opacity: 0;
+  }
+
+  .group-card-wrap:hover .group-favorite-btn,
+  .group-card-wrap:focus-within .group-favorite-btn {
+    opacity: 1;
+  }
+}
+
+/* ---------- Empty state (no favorites) ---------- */
+
+.group-empty {
+  grid-column: 1 / -1;
+  padding: 8px 4px 16px;
+  font-size: 0.9rem;
+  color: #595959;
+}
+
+/* ---------- Staggered entrance (on the <li> so it doesn't fight hover) ---------- */
+
+.group-enter {
+  animation: group-enter 0.5s ease both;
+  animation-delay: calc(var(--i, 0) * 70ms);
+}
+
+@keyframes group-enter {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* =========================================================
+   COLLAPSIBLE SECTIONS
+   ========================================================= */
+
+.group-section {
+  margin-top: 8px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.group-section:last-child {
+  border-bottom: none;
+}
+
+.group-section-heading {
+  margin: 0;
+  font-size: inherit;
+}
+
+.group-section-toggle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 14px 4px;
+  border: none;
+  border-radius: 10px;
+  background: transparent;
+  font: inherit;
+  text-align: left;
+  color: inherit;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.group-section-toggle:hover {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.group-section-toggle:focus-visible {
+  outline: 3px solid var(--midnightBlack, #1a1a1a);
+  outline-offset: 2px;
+}
+
+/* Color dot (activity sections) */
+.group-section-dot {
+  flex: 0 0 auto;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+/* Star (Favorites section header, replaces the color dot) */
+.group-section-star {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  color: #e0a800;
+}
+
+.group-section-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #222;
+}
+
+.group-section-count {
+  min-width: 22px;
+  padding: 1px 8px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.07);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-align: center;
+  color: #333;
+}
+
+.group-section-desc {
+  flex: 1;
+  font-size: 0.8rem;
+  color: #595959;
+}
+
+.group-section-chevron {
+  display: flex;
+  margin-left: auto;
+  color: #444;
+  transition: transform 0.3s ease;
+}
+
+.group-section-chevron.is-open {
+  transform: rotate(180deg);
+}
+
+/* Smooth height animation: grid row goes 0fr -> 1fr */
+.group-section-body {
+  display: grid;
+  grid-template-rows: 0fr;
+  visibility: hidden; /* keeps collapsed cards out of the tab order */
+  transition:
+    grid-template-rows 0.35s ease,
+    visibility 0s linear 0.35s;
+}
+
+.group-section-body.is-open {
+  grid-template-rows: 1fr;
+  visibility: visible;
+  transition:
+    grid-template-rows 0.35s ease,
+    visibility 0s linear 0s;
+}
+
+/* Side padding + negative margin so hover shadows aren't clipped */
+.group-section-inner {
+  min-height: 0;
+  overflow: hidden;
+  margin: 0 -14px;
+  padding: 0 14px;
+}
+
+.group-section-inner .profile-group-results {
+  margin-top: 8px;
+}
+
+/* =========================================================
+   SKELETON LOADING
+   ========================================================= */
 
 #profile-groups .skeleton-card {
   height: 246px;
@@ -81,4 +340,45 @@
 #profile-groups .skeleton-img {
   width: 100%;
   flex: 0 0 190px;
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 700px) {
+  .group-section-desc {
+    display: none;
+  }
+}
+
+@media (max-width: 600px) {
+  .profile-group-results {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* =========================================================
+   ACCESSIBILITY: respect reduced motion
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .group-enter {
+    animation: none;
+  }
+
+  .group-card-wrap,
+  .profile-group-results-card,
+  .group-favorite-btn,
+  .group-section-toggle,
+  .group-section-chevron,
+  .group-section-body,
+  .group-section-body.is-open {
+    transition: none;
+  }
+
+  .group-card-wrap:hover,
+  .group-favorite-btn:hover {
+    transform: none;
+  }
 }
